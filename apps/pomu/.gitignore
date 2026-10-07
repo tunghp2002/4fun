@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.pnpm-store/
+.corepack/
+.npm-cache/
+.playwright-cli/
+output/
+tests/
+docs/superpowers/
+*.tsbuildinfo
+*.log
+next-env.d.ts
+AGENTS.md
+CLAUDE.md
+.env*
+!.env.example

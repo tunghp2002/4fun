@@ -1,6 +1,20 @@
 # 4fun
 
-A collection of interactive 3D HTML scenes. Each scene has a standalone HTML file, a reusable generation prompt, and rendered preview images.
+A collection of interactive 3D scenes and small web toys. The scenes include standalone HTML files, reusable generation prompts, and rendered preview images. Web apps live in `apps/`.
+
+## Apps
+
+[Pomu](apps/pomu) is a little slime companion built with Next.js, TypeScript, Three.js and Tailwind CSS. Pet, stretch and split your slime, customize its colors, or feed it mochi using a wooden slingshot. Small slimes grow as they eat and reunite when left alone.
+
+Pomu requires Node.js 20.9 or later and pnpm 12.6.0:
+
+```sh
+cd apps/pomu
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Open `http://localhost:3000`. Use the in-app help for mouse, touch and keyboard controls. For a production server, run `pnpm build` followed by `pnpm start`.
 
 ## Scenes
 
