@@ -1,0 +1,56 @@
+# Room Studio — reusable app prompt
+
+Create a complete, runnable Next.js + React + TypeScript interior-planning app. Combine a readable 2D floor-plan editor with the inviting material and light exploration of a 3D interior viewer. Use these as references for interaction and mood, not source code or asset libraries:
+
+- https://wy51ai.github.io/floorplan-3d/
+- https://sael.net/interior/
+
+Place the app in `apps/room-studio/` with its package lock, run instructions, this prompt and actual rendered preview images. Keep existing apps and standalone scenes intact.
+
+## Shared editing behavior
+
+Use one versioned plan in metres for both views. On desktop, show the SVG plan and Three.js interior side by side. On mobile, provide clear 2D/3D tabs and reachable editing controls. Start with a fully furnished contemporary two-storey house for four residents, with aligned stair shafts and clearly separated sleeping, social and wet areas. Omit gardens, cars, parking and balconies.
+
+Support adding connected rectangular rooms, moving them, resizing by a visible corner or numeric width/depth, and renaming them. Resizing a shared edge must preserve neighboring connections and move their furniture with the room. Snap placement to 10 cm. Add furniture from a small library, drag it in either view, rotate by 90°, edit its footprint and remove it. Keep selection synchronized. Include undo/redo, validated JSON import/export, local save after completed edits and visible storage/import errors.
+
+## Imported furniture
+
+Under Furniture, support static self-contained GLB files and direct HTTP(S) GLB URLs that permit cross-origin access. Check the header and embedded-resource requirements before decoding. Use installed Three.js GLTFLoader, Draco and Meshopt addons; serve Draco decoders locally with attribution. Report unsupported formats, animated/skinned models and compressed texture extensions clearly.
+
+Measure model bounds, center its footprint and ground its lowest geometry on the floor. Let the user check the name and width/depth/height in metres before adding. Keep original materials and model detail. Remove imported camera/light nodes so furniture cannot change the room view or lighting. Add imported footprints to the shared 2D plan, reuse the existing move/rotate/remove/undo and placement rules, and show a reusable imported-model library.
+
+Bound each model to 8 MB, 60,000 triangles, 64 meshes, 32 materials and 8 million texture pixels, with a maximum 4096 px texture side. Allow 8 unique assets, 24 MB of binary files and 300,000 imported triangles per plan. Store files in IndexedDB and only metadata in localStorage. Include files in portable JSON exports, validate every file before restoring a backup, and allow re-importing a missing file to restore its existing instances. Keep version-1 plans without model assets compatible.
+
+## Physical design requirements
+
+Build a continuous floor and a single wall on each shared edge. Create real door/window openings in wall geometry. Connect every indoor room to the entry through shared doors and aligned stair shafts; reject detached rooms, overlapping rooms and walls too short for a doorway. Give doors a 0.9 m opening and reserve an approach zone on both sides. Apply each room's paint to its own wall face.
+
+Size bedrooms by occupancy: one two-person room with a 1.8 m double bed, two bedside positions and enough wardrobe/work space for two; two one-person rooms with 1.1–1.2 m beds and their own wardrobes/desks. Equal room area is not a goal. Provide two complete upstairs bathrooms (one ensuite reached from the main bedroom, one shared from the hall) and a guest WC downstairs. Put laundry upstairs beside the shared bathroom, near the bedrooms, with unobstructed washer access and storage. Reserve 0.7–0.8 m usable working space in front of sanitary fixtures, washers and wardrobes, in addition to checking furniture footprints and door approaches. Keep kitchen preparation, washing and cooking surfaces connected: multiple base/upper cabinets, drawers, a glass-front crockery cabinet with supported visible plates/bowls, sink, hob, oven, extractor and fridge; align worktop heights using the actual counter surfaces, not model heights that include taps. Group upstairs wet spaces over the downstairs service area where possible.
+
+Furniture must stand on the floor, stay inside its room, have actual supporting legs or plinths and have supported cushions, mattresses and tops. Its full visible geometry must fit its declared footprint. Keep solid pieces apart and door approaches clear; allow rugs below furniture. A dining table needs appropriately sized dining chairs; a desk chair must face the desk. Show all assets consistently from top, side and underside views. Reject invalid edits with a concise explanation and preserve the last valid state.
+
+Use clear ceilings of 24 rooms / 160 pieces, room sides 1.8–14 m, and bounded imported coordinates. Treat imported JSON as unknown data: check types, finite numbers, unique IDs, catalog values, geometry and circulation before applying it. Do not claim building-code compliance.
+
+## 3D activation and evening light
+
+Show Enable 3D for first-time visitors. Remember only successful activation in a small, versioned browser preference separate from the plan. On returning visits, automatically start 3D when the panel is visible and a fresh WebGL 2 check succeeds. If preference storage is blocked or cleared, use the first-time CTA without breaking either editor. Never automatically retry failed startup or lost contexts in a loop. When its panel becomes visible, check actual WebGL 2 context availability and release the probe context. Show a usable CTA on capable browsers; otherwise explain that 3D is unavailable while keeping 2D editing intact. Separate unsupported/blocked graphics from renderer-start failure, provide manual check/retry, recover from lost context, cancel pending startup when unmounted and release renderer contexts when disposed. Load the renderer/model resources on activation, not before it. Do not claim that a website can change browser GPU settings.
+
+As daylight fades between 17:00 and 19:30, smoothly darken ambient light/sky and turn existing lamps on with warm-orange emissive shades and nearby illumination. Return lights to off in daytime. Place light sources at the actual shade bounds and follow furniture movement, removal and floor elevation. Keep a fixed maximum of four unshadowed indoor sources; all shades may glow. Preserve source geometry/material detail, avoid extra shadow passes or bloom, keep night captions readable and return to demand-rendered idle after changes.
+
+## Visual direction
+
+Create a calm architectural editing desk: warm paper surfaces, dark botanical ink, restrained clay accents, fine measurement lines, readable typography and compact controls. Keep the floor plan clear at small sizes. Use a coherent contemporary interior: warm-white walls, pale stone floors, charcoal aluminium frames, large clear windows, glass entrance doors, flush interior doors with actual handles/hinges, base trim and glass/metal stair guards. The default example is a two-storey, three-bedroom home for four people with two full upstairs bathrooms, a guest WC, upstairs laundry, living room, home office and fitted kitchen/dining. Leave the garden, car and parking out of scope. Both floors must be connected by an aligned U-shaped stair, with an actual upper slab opening and guarded landing.
+
+Use licensed artist/source models for every movable furniture/fixture type in this example: seating, beds, tables, desks, storage, wardrobes, TV, mirrors, lamps, refrigerator, AC, washing machine, toilet, vanity and shower. The kitchen needs actual sink, induction hob, oven front, base and upper cabinet models. Choose CC0 or CC BY models with traceable authors/source/license; self-host GLBs and embedded textures and use your own rendered thumbnails. Keep original source geometry, normals and UVs; batch by material and share decoded resources. Contemporary white, charcoal, ceramic, stone, glass and neutral fabric finishes must be consistent. Do not use wooden tables, vintage furniture or crude block substitutes for the fixture models. A thin woven rug and dimension-driven architectural shell/stair/joinery may remain procedural. Preserve saved indoor edits; remove an old exterior reversibly with Undo, rather than resetting the whole project. Fit full visible geometry to the declared editable footprint and set believable heights/mounts. Provide cutaway/full-wall inspection, orbit/zoom and whole-plan, selected-room and top camera presets. Keep light and material controls responsive and understandable. When a floor or paint changes, spread the new material visibly over the affected room in about one second. Use a temporary 3D shader mask and a lightweight SVG floor reveal. Rapid choices must finish with the latest material; preserve the final texture/paint quality, honor reduced motion and return to demand rendering after the effect. Do not add flashes, enclosing cages or oversized selection rings. A selected piece uses a flat floor rectangle matching its footprint/rotation; during 3D dragging lift it 10 cm and show green/red placement feedback. An invalid drop restores the starting position without an undo step.
+
+## Performance requirements
+
+Lazy-load the renderer. Initialize mobile WebGL only when its view is opened. Reuse the renderer and unchanged room/item resources. Generate textures once, share geometry/materials, merge static furniture parts by material without changing their triangles, and move existing roots during edits. Coalesce pointer work with requestAnimationFrame; keep transient camera/drag state out of React state.
+
+Render on demand. Stop rendering when idle or hidden, dispose resources/listeners and temporary reveal materials when done, cache decoded imports once and share their geometry/materials between instances, bound device pixel ratio and use one shadow-casting sun. Keep model and material detail fixed during interaction. Optimize measured work rather than silently reducing visual quality. Record actual draw calls, triangle/resource counts, idle frame stability and edit/frame timing; state the hardware/software test environment and avoid unsupported FPS promises.
+
+## Review before delivery
+
+Write the smallest runnable geometry/import check before implementation. Typecheck and build the app. Execute desktop and mobile browser flows, including real touch dragging, 3D-to-2D updates, one-step undo after a gesture, invalid import, persistence and repeated resizing. Verify GLB file/direct-link imports, malformed-file rejection, imported dimensions and floor contact, 2D/3D dragging, portable backups in a fresh browser, missing-file recovery, repeated material spreading and reduced motion. Review physical supports, window/door holes, passage clearance, wall colors and camera framing from multiple angles. Fix verified issues at their source.
+
+Deliver working code, a concise README, the completed review checklist and screenshots of the actual app. Do not substitute mockups for captures or leave blank/inert controls. Keep the implementation focused; no backend, accounts or unrelated features are needed.

@@ -16,6 +16,18 @@ pnpm dev
 
 Open `http://localhost:3000`. Use the in-app help for mouse, touch and keyboard controls. For a production server, run `pnpm build` followed by `pnpm start`.
 
+[Room Studio](apps/room-studio) combines an editable 2D floor plan with a synchronized 3D interior. Add connected rooms, resize shared walls, arrange furniture and explore materials and daylight. Desktop shows both views; mobile uses tabs. Its Modern Residence example includes two furnished floors, a double bedroom plus two single bedrooms, two full upstairs bathrooms, a guest WC, upstairs laundry, a complete fitted kitchen and a real stair opening, with a contemporary source-model furniture library. It remembers successful 3D activation on this browser and includes graphics availability/retry messages, warm lamps at dusk, visible material transitions, GLB furniture import from files/direct links, undo/redo, local save and portable JSON backups containing model files. [Prompt](apps/room-studio/PROMPT.md) · [Preview](apps/room-studio/images/preview.png) · [Mobile](apps/room-studio/images/mobile.png).
+
+Room Studio requires Node.js 20.9+ and pnpm 9.15.9:
+
+```sh
+cd apps/room-studio
+pnpm install --frozen-lockfile
+pnpm dev --port 3012
+```
+
+Open `http://localhost:3012`. See the app's README for controls, scope and performance checks.
+
 ## Scenes
 
 | Scene | HTML | Prompt | Preview |

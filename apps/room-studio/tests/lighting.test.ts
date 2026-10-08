@@ -1,0 +1,33 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import * as THREE from "three";
+import { eveningStrength, createIndoorLighting } from "../lib/lighting.ts";
+
+test("evening light grows continuously at dusk and follows only existing lamps", () => {
+  assert.equal(eveningStrength(14),0);
+  assert.equal(eveningStrength(17),0);
+  assert(eveningStrength(18)>0&&eveningStrength(18)<1);
+  assert(eveningStrength(18.5)>eveningStrength(18));
+  assert.equal(eveningStrength(20),1);
+  const scene=new THREE.Scene(),lighting=createIndoorLighting(scene),lamp=new THREE.Group();
+  lamp.userData={id:"lamp",kind:"lamp"};
+  const shade=new THREE.Mesh(new THREE.BoxGeometry(.4,.3,.3),new THREE.MeshStandardMaterial({name:"squares.001_tela_lamp_tile.jpg"}));
+  shade.position.y=1.45;lamp.add(shade);lamp.position.set(2,3.2,4);scene.add(lamp);
+  const chair=new THREE.Group();chair.userData.kind="chair";chair.add(new THREE.Mesh(shade.geometry,shade.material));
+  lighting.update([lamp,chair],14);
+  const lights: THREE.PointLight[]=[];scene.traverse(o=>{if(o instanceof THREE.PointLight)lights.push(o);});
+  assert.equal(lights.length,4);
+  assert(lights.every(l=>l.intensity===0&&!l.castShadow));
+  assert.equal(shade.material.emissiveIntensity,0);
+  lighting.update([lamp,chair],20);
+  assert.equal(lights.filter(l=>l.intensity>0).length,1);
+  assert(shade.material.emissive.r>shade.material.emissive.b&&shade.material.emissiveIntensity>0);
+  assert(Math.abs(lights[0].position.y-4.65)<.001);
+  assert.equal(lights[0].position.x,2);
+  lamp.position.x=3;lighting.update([lamp],20);assert.equal(lights[0].position.x,3);
+  lighting.update([],20);assert(lights.every(l=>l.intensity===0));
+  const lamps=Array.from({length:10},()=>lamp.clone());lighting.update(lamps,20);
+  assert.equal(lights.filter(l=>l.intensity>0).length,4);
+  lighting.update(lamps,14);assert.equal(shade.material.emissiveIntensity,0);
+  shade.geometry.dispose();shade.material.dispose();
+});
