@@ -34,10 +34,13 @@ Open `http://localhost:3012`. See the app's README for controls, scope and perfo
 | --- | --- | --- | --- |
 | Amemachi — Rainy Night Konbini | [Open file](scenes/rainy-konbini/index.html) | [Generation prompt](scenes/rainy-konbini/PROMPT.md) | [Overview](scenes/rainy-konbini/images/preview.png) · [Detail](scenes/rainy-konbini/images/detail.png) |
 | Harumachi — Spring Morning Station | [Open file](scenes/spring-station/index.html) | [Generation prompt](scenes/spring-station/PROMPT.md) | [Overview](scenes/spring-station/images/preview.png) · [Detail](scenes/spring-station/images/detail.png) · [Platform](scenes/spring-station/images/platform.png) · [Vegetation](scenes/spring-station/images/vegetation.png) · [Passing train](scenes/spring-station/images/train.png) · [Local stop](scenes/spring-station/images/stopping-train.png) · [Interior](scenes/spring-station/images/train-window.png) · [Boarding](scenes/spring-station/images/train-boarding.png) · [Cab](scenes/spring-station/images/train-cab.png) · [Middle car](scenes/spring-station/images/train-middle.png) |
+| Nếp Núi — Vietnamese Rice Terraces | [Open file](scenes/vietnam-terraces/index.html) | [Generation prompt](scenes/vietnam-terraces/PROMPT.md) | [Overview](scenes/vietnam-terraces/images/preview.png) · [Detail](scenes/vietnam-terraces/images/detail.png) · [Buffalo](scenes/vietnam-terraces/images/buffalo.png) · [Rain](scenes/vietnam-terraces/images/rain.png) |
 
 ![A Japanese convenience-store miniature on a rainy night](scenes/rainy-konbini/images/preview.png)
 
 ![A Japanese countryside station on a peaceful spring morning](scenes/spring-station/images/preview.png)
+
+![Dense golden Vietnamese terraces with thatched cottages and buffalo](scenes/vietnam-terraces/images/preview.png)
 
 ## View a scene
 
@@ -63,4 +66,4 @@ scenes/
 
 Use a descriptive folder name for each new scene. Keep its code in `index.html`, its reusable prompt in `PROMPT.md`, and its rendered images in `images/`. Link the scene from the table above.
 
-The scenes embed Three.js r160.1, OrbitControls, and Reflector. Their MIT license notice is included in the HTML. Preview images are captures of the actual HTML scene.
+Scenes embed Three.js r160.1 and OrbitControls, with Reflector or GLTFLoader where needed. Their MIT notices are included in the HTML. External assets retain their own licenses and credits. Preview images are captures of the actual HTML scene.
