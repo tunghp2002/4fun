@@ -4,6 +4,8 @@ A collection of interactive 3D scenes and small web toys. The scenes include sta
 
 ## Apps
 
+[mesq](apps/mesq) is an **unofficial educational port of the original work by [mesq](https://mesq.me/)**. The original scene code, design, artwork and content belong to mesq. This Next.js / React adaptation includes a strict TypeScript shell, lifecycle management and modular scene code. Run `pnpm install --frozen-lockfile` then `pnpm dev` in `apps/mesq`, and open `http://localhost:3013`. [Attribution and provenance](apps/mesq/CREDITS.md) · [Source and controls](apps/mesq/README.md) · [Implementation notes](apps/mesq/docs/reconstruction.md) · [Preview](apps/mesq/images/preview.png).
+
 [Pomu](apps/pomu) is a little slime companion built with Next.js, TypeScript, Three.js and Tailwind CSS. Pet, stretch and split your slime, customize its colors, or feed it mochi using a wooden slingshot. Small slimes grow as they eat and reunite when left alone.
 
 Pomu requires Node.js 20.9 or later and pnpm 12.6.0:
