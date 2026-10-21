@@ -1,0 +1,115 @@
+{
+  "checks": [
+    "Supported harbor, three cabins, eleven trees and three auroral layers",
+    "Cabin staircases descend onto solid land with reasonable risers",
+    "Walking paths avoid the cabin footprints and reach the pier",
+    "No visible interface and a focusable accessible canvas",
+    "Complete square base fits the desktop view",
+    "Visible auroral curtains evolve continuously with slower small-time changes",
+    "Live reflection contains the moving aurora and refreshes without camera movement",
+    "All auroral layers and the water share one animation clock",
+    "The boat stays above the seabed and its mooring lines follow the cleats",
+    "Motion reuses geometry, textures and reflection targets",
+    "Mouse drag orbits",
+    "Right drag pans",
+    "Scroll zooms",
+    "Home resets exactly and keyboard arrows orbit",
+    "Animation runs and Space pauses and resumes it",
+    "Reduced motion stops idle rendering and keeps navigation available",
+    "Close, opposite, overhead and different-time views retain scene detail",
+    "The live planar mirror has one bounded 640 × 640 target",
+    "Portrait framing fits and pixel ratio is capped at 1.6",
+    "One-finger touch orbits",
+    "Two-finger pinch zooms",
+    "Visibility handling pauses hidden pages",
+    "Offline HTML makes no HTTP requests and reports no browser errors"
+  ],
+  "errors": [],
+  "network": [],
+  "audit": {
+    "findings": [],
+    "cabins": 3,
+    "trees": 11,
+    "curtains": 3,
+    "pier": {
+      "width": 2.4,
+      "top": 1.35,
+      "start": 1.25,
+      "end": 10.7
+    },
+    "boat": {
+      "x": 10,
+      "z": 8,
+      "width": 2.16,
+      "length": 5.8
+    },
+    "base": {
+      "width": 32,
+      "depth": 32
+    },
+    "stats": {
+      "calls": 443,
+      "triangles": 430075,
+      "geometries": 39,
+      "textures": 5
+    }
+  },
+  "motion": {
+    "near": 0.22743425728500355,
+    "far": 3.654347311063729,
+    "reflection": 0.008264911443305512,
+    "greenSky": 567,
+    "greenWater": 327
+  },
+  "resources": {
+    "ids": [
+      "03787eb5-4bc8-45ab-8d47-116cbd2bb1a1",
+      "037a2659-67f0-4931-aa4c-71450b5c8519",
+      "0674db3f-55bc-4204-b734-dc6012657ad4",
+      "0988e01f-5a43-447c-8ec0-1f24a253db9d",
+      "0f3b8f7a-81fc-4795-94fc-71c13f08378c",
+      "1848e098-d8a8-46eb-bd28-4ad4bda9dbc9",
+      "1a615ce5-c90c-424b-9836-2773acd01d01",
+      "1d54c144-8518-4c34-aefd-cb475cdef335",
+      "22e03dfd-e58f-4f98-bb13-8c984236e010",
+      "240fef1b-487b-4293-a2ea-36a6a0ed1cc1",
+      "2b4ac7af-1b39-4ae1-a197-5b421b7a1ccf",
+      "2fa378a4-8848-410b-a63b-ad96944b4155",
+      "496aff21-d970-45c4-ae90-e5096a8479ff",
+      "4de5cf87-076f-4b01-b3bb-7a7f2e1cd575",
+      "4fec1f46-9492-459d-b668-0ae349d59b5c",
+      "5aeeacb4-0585-4313-8d9d-17f681904da5",
+      "615b625d-41dc-454a-806d-baad1c8cf790",
+      "6a791173-efc3-4cdc-9d34-bd98b3071ee6",
+      "6d635a6a-f491-4ed3-ae30-08c2a27776a0",
+      "7821b0d2-b1a0-4f0e-9e88-a70a36862d06",
+      "8402b25c-f2c3-4451-93bf-296ec41c3d7f",
+      "98bd620a-c0fd-4203-a6e7-4168a2d12354",
+      "9c512f36-ec37-49b8-baa6-50e4d2a02c82",
+      "a0f2bbeb-6519-497f-ad1b-209ae20d59ed",
+      "a35c075e-a6b4-4734-9d13-63a6eb94c8b7",
+      "a9827ca1-02f2-4b62-b48d-356a25ee4c35",
+      "a9b973dc-8427-41fc-ab65-726671ceb39e",
+      "aa92b5a9-5e37-49f5-98ad-80b796572387",
+      "baa54c81-2f00-4863-84ce-20e098881930",
+      "c0df051c-da3a-4ca0-ab24-890e7db04035",
+      "c4761e4e-d4c4-4239-9b0e-3a2df30a049a",
+      "cd60fa99-7e85-44a4-91a0-6e39cce66fbe",
+      "de3d1711-6ad5-4887-a53b-02c92a88ac2e",
+      "e4ab2e86-93b2-47a6-b57d-760930e4323c",
+      "e7abd3fc-8be4-4263-9f7f-2776c4f190f4",
+      "f071dbe6-58eb-42f3-ab55-8d56f2b0beec",
+      "f46908c1-a8d9-422a-a6af-4c9a74a6de29",
+      "f99d4ce4-15b1-45bb-9368-e184710dc812",
+      "fe2e4619-8c0f-4a14-9f5f-874b7d4a6f76"
+    ],
+    "geometries": 39,
+    "textures": 5,
+    "curtains": 3
+  },
+  "htmlHash": "14acd3dfcdbcede29e2ffd34fd5377fd63e7cdd50cc70495f598b8eeb5fb35b9",
+  "unchecked": [
+    "Real-device GPU frame rate",
+    "Other browser engines"
+  ]
+}
