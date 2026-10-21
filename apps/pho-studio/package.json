@@ -1,0 +1,32 @@
+{
+  "name": "pho-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 3015",
+    "build": "next build",
+    "start": "python3 -m http.server 3015 --bind 0.0.0.0 --directory out",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@mapbox/vector-tile": "3.0.0",
+    "clipper-lib": "6.4.2",
+    "next": "16.3.7",
+    "pbf": "5.1.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/clipper-lib": "6.4.0",
+    "@types/node": "26.6.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/three": "0.186.0",
+    "tsx": "4.21.0",
+    "typescript": "6.0.3"
+  }
+}

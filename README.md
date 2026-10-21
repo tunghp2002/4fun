@@ -4,6 +4,8 @@ A collection of interactive 3D scenes and small web toys. The scenes include sta
 
 ## Apps
 
+[Phố Studio](apps/pho-studio) turns real Vietnamese locations into editable 3D views, with a Vietnamese interface, paper/clay/ink styles, camera and lighting controls, local saved views and PNG/SVG/GLB/OBJ exports. Explore 50 destinations, 93 architectural and scenic illustrations, and continuous map navigation across Vietnam. It includes six attributed OpenStreetMap snapshots and can load other locations by search or coordinates. Run `pnpm install --frozen-lockfile` then `pnpm dev` in `apps/pho-studio`, and open `http://localhost:3015`. [Source and controls](apps/pho-studio/README.md) · [Credits](apps/pho-studio/CREDITS.md) · [Preview](apps/pho-studio/images/preview.png).
+
 [mesq](apps/mesq) is an **unofficial educational port of the original work by [mesq](https://mesq.me/)**. The original scene code, design, artwork and content belong to mesq. This Next.js / React adaptation includes a strict TypeScript shell, lifecycle management and modular scene code. Run `pnpm install --frozen-lockfile` then `pnpm dev` in `apps/mesq`, and open `http://localhost:3013`. [Attribution and provenance](apps/mesq/CREDITS.md) · [Source and controls](apps/mesq/README.md) · [Implementation notes](apps/mesq/docs/reconstruction.md) · [Preview](apps/mesq/images/preview.png).
 
 [Pomu](apps/pomu) is a little slime companion built with Next.js, TypeScript, Three.js and Tailwind CSS. Pet, stretch and split your slime, customize its colors, or feed it mochi using a wooden slingshot. Small slimes grow as they eat and reunite when left alone.
