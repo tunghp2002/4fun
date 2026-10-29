@@ -32,7 +32,25 @@ type Footprint = { points: Point[]; holes: Point[][] };
 type Placement = { kind: string; x: number; z: number; footprint: Point[] };
 type Tone = keyof typeof COLORS.paper;
 const COLORS = {
+  pixel: {
+    lamp: "#fff0bd",
+    walk: "#dfd1ae",
+    curb: "#f2e9d3",
+    white: "#f9f5e6",
+    metal: "#687c8b",
+    dark: "#293e52",
+    glass: "#5994ac",
+    tire: "#27343d",
+    wood: "#936e48",
+    ceramic: "#ddd8c3",
+    skin: "#d5a07b",
+    red: "#cc5c43",
+    blue: "#508aa8",
+    cream: "#e6bd61",
+    green: "#64985b",
+  },
   paper: {
+    lamp: "#fff0bd",
     walk: "#d9d0b7",
     curb: "#eee5ce",
     white: "#f5f0da",
@@ -49,6 +67,7 @@ const COLORS = {
     green: "#789477",
   },
   clay: {
+    lamp: "#f5f1df",
     walk: "#d9d7d0",
     curb: "#eeece5",
     white: "#f5f4ed",
@@ -65,6 +84,7 @@ const COLORS = {
     green: "#bdc9b8",
   },
   ink: {
+    lamp: "#ffffff",
     walk: "#d6d7d1",
     curb: "#fafbf5",
     white: "#ffffff",
@@ -776,7 +796,7 @@ export function createStreetDetails(
           0.075,
         );
       part("metal", box, x, y, z, angle, -0.62, 6.6, 0, 1.24, 0.07, 0.07);
-      part("cream", box, x, y, z, angle, -1.2, 6.57, 0, 0.39, 0.09, 0.24);
+      part("lamp", box, x, y, z, angle, -1.2, 6.57, 0, 0.39, 0.09, 0.24);
       const p = { x, y, z, angle, street },
         values = poles.get(street.id);
       if (values) values.push(p);
@@ -924,6 +944,25 @@ export function createStreetDetails(
     root.add(wires);
   }
   root.userData = { illustrative: true, counts, placements };
+  const lamps = [...poles.values()].flat();
+  const poolGeometry = new THREE.CircleGeometry(5.5, 16);
+  poolGeometry.rotateX(-Math.PI / 2);
+  const poolColors = new Float32Array(poolGeometry.getAttribute("position").count * 3);
+  poolColors.fill(1, 0, 3);
+  poolGeometry.setAttribute("color", new THREE.BufferAttribute(poolColors, 3));
+  const poolMaterial = new THREE.MeshBasicMaterial({
+    color: "#ffc775", vertexColors: true, transparent: true, opacity: 0.32,
+    blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+  });
+  const pools = new THREE.InstancedMesh(poolGeometry, poolMaterial, lamps.length);
+  pools.name = "Night_street_lights";
+  pools.userData.screenOnly = true;
+  pools.visible = false;
+  lamps.forEach((p, i) => pools.setMatrixAt(i, new THREE.Matrix4().makeTranslation(
+    p.x + p.street.uz * 1.2, p.y + 0.08, p.z - p.street.ux * 1.2,
+  )));
+  pools.computeBoundingSphere();
+  root.add(pools);
   let disposed = false;
   return {
     root,
@@ -931,9 +970,13 @@ export function createStreetDetails(
     camera,
     fronts,
     blocked,
-    apply(style: SceneStyle, outline = 0.55) {
-      for (const [tone, material] of materials)
+    apply(style: SceneStyle, outline = 0.55, night = false) {
+      pools.visible = night;
+      for (const [tone, material] of materials) {
         material.color.set(COLORS[style][tone]);
+        material.emissive.set("#ffc775");
+        material.emissiveIntensity = night && tone === "lamp" ? 2 : 0;
+      }
       edgeMaterial.color.set(
         style === "ink" ? "#242c26" : style === "clay" ? "#8f958d" : "#39423a",
       );
@@ -943,6 +986,8 @@ export function createStreetDetails(
     dispose() {
       if (disposed) return;
       disposed = true;
+      pools.dispose();
+      poolMaterial.dispose();
       root.traverse((object) => {
         if (
           object instanceof THREE.Mesh ||

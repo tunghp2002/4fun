@@ -70,8 +70,21 @@ export function createTrees(
   }
   const coarseGeometry = mergeGeometries(pieces)!;
   pieces.forEach((g) => g.dispose());
+  for (const geometry of [fineGeometry, coarseGeometry]) {
+    const position = geometry.getAttribute("position"),
+      normal = geometry.getAttribute("normal"),
+      shades = new Float32Array(position.count * 3);
+    // Baked leaf facets add canopy texture without more instances or an animated shader.
+    for (let i = 0; i < position.count; i += 3) {
+      const variation = Math.sin(position.getX(i) * 31 + position.getZ(i) * 47);
+      const shade = 0.86 + variation * 0.07 + Math.max(0, normal.getY(i)) * 0.14;
+      for (let j = i; j < Math.min(i + 3, position.count); j++)
+        shades.fill(shade, j * 3, j * 3 + 3);
+    }
+    geometry.setAttribute("color", new THREE.BufferAttribute(shades, 3));
+  }
   const bark = new THREE.MeshStandardMaterial({ roughness: 1 });
-  const foliage = new THREE.MeshStandardMaterial({ roughness: 0.95 });
+  const foliage = new THREE.MeshStandardMaterial({ roughness: 0.95, vertexColors: true });
   const contour = new THREE.MeshBasicMaterial({
     side: THREE.BackSide,
     transparent: true,

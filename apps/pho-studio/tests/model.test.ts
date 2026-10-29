@@ -179,7 +179,7 @@ test("build, style, hide and dispose an actual scene with finite geometry and in
       if (object instanceof THREE.InstancedMesh && object.instanceColor) {
         assert.equal(
           (object.material as THREE.MeshStandardMaterial).vertexColors,
-          false,
+          !!object.geometry.getAttribute("color"),
         );
       }
     }
@@ -192,10 +192,12 @@ test("build, style, hide and dispose an actual scene with finite geometry and in
   });
   assert.equal(city.root.getObjectByName("buildings")?.visible, false);
   assert.equal(city.root.scale.y, 1.5);
-  let disposedInstances = 0;
+  const disposedInstances = new Map<THREE.InstancedMesh, number>();
   city.root.traverse((object) => {
-    if (object instanceof THREE.InstancedMesh)
-      object.addEventListener("dispose", () => disposedInstances++);
+    if (object instanceof THREE.InstancedMesh) {
+      disposedInstances.set(object, 0);
+      object.addEventListener("dispose", () => disposedInstances.set(object, disposedInstances.get(object)! + 1));
+    }
   });
   city.apply({ ...INITIAL_SETTINGS, style: "ink", outlines: 0.2 });
   const edges = city.root
@@ -207,7 +209,8 @@ test("build, style, hide and dispose an actual scene with finite geometry and in
   city.dispose();
   city.dispose();
   assert.equal(city.root.children.length, 0);
-  assert.equal(disposedInstances, 5);
+  assert(disposedInstances.size >= 5);
+  assert([...disposedInstances.values()].every((count) => count === 1));
 });
 
 test("canceled scene generation never returns a partially live model", async () => {

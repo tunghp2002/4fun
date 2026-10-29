@@ -130,7 +130,7 @@ test("all five scenic models have finite bounded geometry, consistent themes and
     );
     const colors = mesh.geometry.getAttribute("color"),
       original = Array.from(colors.array);
-    for (const style of ["clay", "ink"] as const) {
+    for (const style of ["pixel", "clay", "ink"] as const) {
       asset.apply(style, 0.4);
       assert.notDeepEqual(Array.from(colors.array), original);
     }

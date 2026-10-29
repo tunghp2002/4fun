@@ -7,12 +7,14 @@ export function normalizeSettings(value: unknown): SceneSettings {
       ? (value as Record<string, unknown>)
       : {};
   if (
+    input.style === "pixel" ||
     input.style === "paper" ||
     input.style === "clay" ||
     input.style === "ink"
   )
     settings.style = input.style;
   for (const key of [
+    "night",
     "buildings",
     "roads",
     "trees",

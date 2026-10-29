@@ -104,6 +104,8 @@ test("solid facades face outward for either footprint winding and retain geometr
       );
       details.apply("paper");
       assert.deepEqual(Array.from(colors.array), original);
+      details.apply("pixel");
+      assert.notDeepEqual(Array.from(colors.array), original);
       assert.equal(
         geometry,
         mesh.geometry,

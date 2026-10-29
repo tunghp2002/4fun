@@ -57,6 +57,7 @@ const VIEWS: { id: CameraView; name: string; icon: IconName }[] = [
   { id: "eye", name: "Tầm mắt", icon: "eye" },
 ];
 const STYLES = [
+  { id: "pixel", name: "Pixel phố" },
   { id: "paper", name: "Màu giấy" },
   { id: "clay", name: "Mô hình" },
   { id: "ink", name: "Nét mực" },
@@ -206,7 +207,7 @@ export default function Studio() {
       const params = new URLSearchParams(location.hash.slice(1)),
         style = params.get("style"),
         hour = Number(params.get("hour"));
-      if (style === "paper" || style === "clay" || style === "ink")
+      if (style === "pixel" || style === "paper" || style === "clay" || style === "ink")
         setSettings((s) => ({ ...s, style }));
       if (params.has("hour") && hour >= 6 && hour <= 18)
         setSettings((s) => ({ ...s, hour }));
@@ -526,7 +527,7 @@ export default function Studio() {
     { key: "shadows", label: "Bóng đổ", icon: "sun" },
   ];
   return (
-    <div className="studio-shell">
+    <div className="studio-shell" data-night={settings.night}>
       <a className="skip-link" href="#scene-area">
         Đến cảnh 3D
       </a>
@@ -1181,7 +1182,7 @@ export default function Studio() {
                 <section className="setting-section">
                   <h3>Phong cách</h3>
                   <div className="style-cards">
-                    {STYLES.map((style, index) => (
+                    {STYLES.map((style) => (
                       <button
                         key={style.id}
                         className={`style-card style-card--${style.id}`}
@@ -1190,7 +1191,7 @@ export default function Studio() {
                           setSettings((previous) => ({
                             ...previous,
                             style: style.id,
-                            outlines: style.id === "ink" ? 0.85 : 0.55,
+                            outlines: style.id === "ink" ? 0.85 : style.id === "pixel" ? 0.38 : 0.55,
                           }))
                         }
                       >
@@ -1223,12 +1224,20 @@ export default function Studio() {
                   </div>
                 </section>
                 <section className="setting-section">
+                  <div className="light-switch" role="group" aria-label="Thời gian trong ngày">
+                    <button aria-pressed={!settings.night} onClick={() => update("night", false)}>
+                      <Icon name="sun" size={15} /> Ban ngày
+                    </button>
+                    <button aria-pressed={settings.night} onClick={() => update("night", true)}>
+                      <Icon name="moon" size={15} /> Ban đêm
+                    </button>
+                  </div>
                   <div className="setting-label">
                     <label htmlFor="sun-hour">
-                      <Icon name="sun" size={16} />
-                      Ánh sáng
+                      <Icon name={settings.night ? "moon" : "sun"} size={16} />
+                      {settings.night ? "Ánh trăng" : "Ánh sáng"}
                     </label>
-                    <output htmlFor="sun-hour">{timeLabel}</output>
+                    <output htmlFor="sun-hour">{settings.night ? "21:00" : timeLabel}</output>
                   </div>
                   <input
                     id="sun-hour"
@@ -1237,6 +1246,7 @@ export default function Studio() {
                     max={18}
                     step={0.25}
                     value={settings.hour}
+                    disabled={settings.night}
                     onChange={(event) =>
                       update("hour", Number(event.target.value))
                     }

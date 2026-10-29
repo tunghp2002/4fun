@@ -101,7 +101,7 @@ test("all 49 added models have distinct finite geometry, reusable themes and bou
     assert(bounds.getSize(new THREE.Vector3()).length() < 500, entry.kind);
     const colors = mesh.geometry.getAttribute("color");
     const original = Array.from(colors.array);
-    for (const style of ["ink", "clay"] as const) {
+    for (const style of ["pixel", "ink", "clay"] as const) {
       asset.apply(style, 0.5);
       assert.notDeepEqual(Array.from(colors.array), original, entry.kind);
     }

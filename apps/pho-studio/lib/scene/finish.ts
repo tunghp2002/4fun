@@ -4,6 +4,7 @@ import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import * as THREE from "three";
+import type { SceneStyle } from "../types";
 
 export function createFinish(
   renderer: THREE.WebGLRenderer,
@@ -23,12 +24,13 @@ export function createFinish(
     distanceFallOff: 1,
   });
   ao.updatePdMaterial({ samples: 8, radius: 3 });
-  const ink = new ShaderPass({
+  const material = new THREE.ShaderMaterial({
     uniforms: {
       tDiffuse: { value: null },
       tDepth: { value: ao.depthTexture },
       tNormal: { value: ao.normalTexture },
       ink: { value: 0 },
+      pixelArt: { value: 0 },
       outlines: { value: 0.55 },
       pixelScale: { value: 1 },
       cameraNear: { value: camera.near },
@@ -40,12 +42,15 @@ export function createFinish(
       void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
     fragmentShader: `#include <packing>
       uniform sampler2D tDiffuse, tDepth, tNormal;
-      uniform float ink, outlines, pixelScale, cameraNear, cameraFar, cameraHeight;
+      uniform float ink, pixelArt, outlines, pixelScale, cameraNear, cameraFar, cameraHeight;
       uniform vec2 texel; varying vec2 vUv;
       float depthAt(vec2 uv) { return -perspectiveDepthToViewZ(texture2D(tDepth, uv).x, cameraNear, cameraFar); }
       void main() {
-        vec3 color = texture2D(tDiffuse, vUv).rgb;
-        float depth = depthAt(vUv);
+        float pixelWidth = max(1.0, floor(pixelScale + 0.5));
+        vec2 block = texel * pixelWidth;
+        vec2 uv = pixelArt > 0.5 ? (floor(vUv / block) + 0.5) * block : vUv;
+        vec3 color = texture2D(tDiffuse, uv).rgb;
+        float depth = depthAt(uv);
         float distance = max(0.0, depth - abs(cameraHeight) * 0.7);
         float distanceFade = 1.0 - 0.8 * smoothstep(220.0, 1400.0, distance);
         if (ink > 0.5) {
@@ -60,21 +65,29 @@ export function createFinish(
           color = vec3(light < 0.18 ? 0.12 : mix(tone, screen, 0.2 * detail));
         }
         if (outlines > 0.001) {
-          vec3 normal = texture2D(tNormal, vUv).xyz * 2.0 - 1.0;
+          vec3 normal = texture2D(tNormal, uv).xyz * 2.0 - 1.0;
           float silhouette = 0.0, crease = 0.0;
           for (int i = 0; i < 4; i++) {
             vec2 offset = i == 0 ? vec2(texel.x, 0.0) : i == 1 ? vec2(-texel.x, 0.0) : i == 2 ? vec2(0.0, texel.y) : vec2(0.0, -texel.y);
-            float other = depthAt(vUv + offset);
+            if (pixelArt > 0.5) offset *= pixelWidth;
+            float other = depthAt(uv + offset);
             silhouette = max(silhouette, smoothstep(0.035, 0.14, (other - depth) / max(1.0, depth)));
-            vec3 otherNormal = texture2D(tNormal, vUv + offset).xyz * 2.0 - 1.0;
+            vec3 otherNormal = texture2D(tNormal, uv + offset).xyz * 2.0 - 1.0;
             crease = max(crease, smoothstep(0.22, 0.65, 1.0 - dot(normal, otherNormal)));
           }
           float edge = max(silhouette, crease * 0.65) * max(ink * 0.5, distanceFade);
-          color = mix(color, ink > 0.5 ? vec3(0.09) : vec3(0.16, 0.21, 0.19), edge * outlines * 0.88);
+          vec3 edgeColor = ink > 0.5 ? vec3(0.09) : pixelArt > 0.5 ? vec3(0.12, 0.19, 0.27) : vec3(0.16, 0.21, 0.19);
+          color = mix(color, edgeColor, edge * outlines * 0.88);
+        }
+        if (pixelArt > 0.5 && depth < cameraFar * 0.999) {
+          vec2 cell = floor(vUv / block);
+          float dither = mod(mod(cell.x, 2.0) * 2.0 + mod(cell.y, 2.0) * 3.0, 4.0) / 4.0 - 0.375;
+          color = floor(clamp(color, 0.0, 1.0) * 31.0 + 0.5 + dither * 0.4) / 31.0;
         }
         gl_FragColor = vec4(color, 1.0);
       }`,
   });
+  const ink = new ShaderPass(material);
   composer.addPass(new RenderPass(scene, camera));
   composer.addPass(ao);
   composer.addPass(new OutputPass());
@@ -97,11 +110,12 @@ export function createFinish(
       ink.uniforms.pixelScale.value = ratio;
       ink.uniforms.texel.value.set(1 / (width * ratio), 1 / (height * ratio));
     },
-    update(style: string, shadows: boolean, outlines: number) {
+    update(style: SceneStyle, shadows: boolean, outlines: number, night = false) {
       ink.uniforms.ink.value = style === "ink" ? 1 : 0;
+      ink.uniforms.pixelArt.value = style === "pixel" ? 1 : 0;
       ink.uniforms.outlines.value = outlines;
-      ao.enabled = shadows || outlines > 0;
-      ao.blendIntensity = shadows ? 0.55 : 0;
+      ao.enabled = style === "pixel" || style === "ink" || shadows || outlines > 0;
+      ao.blendIntensity = shadows ? night ? 0.25 : style === "pixel" ? 0.65 : 0.55 : 0;
     },
     render() {
       ink.uniforms.cameraNear.value = camera.near;

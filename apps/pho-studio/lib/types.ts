@@ -46,11 +46,12 @@ export interface TerrainData {
   maximum: number;
   available: boolean;
 }
-export type SceneStyle = "paper" | "clay" | "ink";
+export type SceneStyle = "pixel" | "paper" | "clay" | "ink";
 export type CameraView = "perspective" | "overview" | "top" | "eye";
 export interface SceneSettings {
   style: SceneStyle;
   hour: number;
+  night: boolean;
   outlines: number;
   heightScale: number;
   buildings: boolean;
@@ -62,9 +63,10 @@ export interface SceneSettings {
   grid: boolean;
 }
 export const INITIAL_SETTINGS: SceneSettings = {
-  style: "paper",
+  style: "pixel",
   hour: 15,
-  outlines: 0.55,
+  night: false,
+  outlines: 0.38,
   heightScale: 1,
   buildings: true,
   roads: true,

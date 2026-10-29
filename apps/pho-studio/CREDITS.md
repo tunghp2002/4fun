@@ -4,6 +4,8 @@
 
 The real-location-to-3D workflow was inspired by [Rokehan / どこでもロケハン](https://tools.oyasumi-gamedev.com/rokehan/), and the street rendering of [World Gacha / ワールドガチャ](https://tools.oyasumi-gamedev.com/worldgacha/), by MIYADAIKU / Oyasumi Game Development. Phố Studio has its own implementation and interface. No affiliation or endorsement is claimed.
 
+The **Pixel phố** visual style also takes inspiration from [Tinygyn](https://tinygyn.com/), an illustrated isometric map of Goiânia. Phố uses its own live 3D geometry, palettes and pixel finish; no Tinygyn artwork, rendered tiles, source code or Google imagery is copied or bundled. No affiliation or endorsement is implied.
+
 ## Map data
 
 **© [OpenStreetMap contributors](https://www.openstreetmap.org/copyright).** The bundled snapshots in `public/data/` are OpenStreetMap extracts under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). Each snapshot includes attribution, license, center, extent and source timestamp. They were fetched on 2026-10-15.

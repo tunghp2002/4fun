@@ -3,6 +3,19 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import type { Point } from "../geo/coordinates";
 
 export const PALETTES = {
+  pixel: {
+    ground: "#d4cfbf",
+    wall: ["#f0eee1", "#cedae0", "#e7caad", "#b7d0ce"],
+    roof: ["#c65d40", "#d28354", "#66788c", "#b9b4a5"],
+    green: "#78a34f",
+    water: "#469fad",
+    road: "#657789",
+    foliage: ["#397e35", "#67a333", "#8ab745"],
+    trunk: "#80694f",
+    edge: "#273e51",
+    window: "#365468",
+    base: "#bec7c4",
+  },
   paper: {
     ground: "#ddd8c5",
     wall: ["#e8c87f", "#e7d9bd", "#f0e9d8", "#d4bda0"],

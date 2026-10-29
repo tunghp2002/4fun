@@ -336,7 +336,7 @@ export function createLandmarks(
     },
     apply(settings: SceneSettings) {
       root.visible = settings.buildings;
-      assets.forEach((asset) => asset.apply(settings.style, settings.outlines));
+      assets.forEach((asset) => asset.apply(settings.style, settings.outlines, settings.night));
     },
     dispose() {
       assets.forEach((asset) => asset.dispose());

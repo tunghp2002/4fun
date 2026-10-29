@@ -251,7 +251,7 @@ test("near and distant grass leave ponds, islands and buildings intact on uneven
       );
       assert(ray(root, 90, 70).length > 0);
     }
-    for (const style of ["paper", "clay", "ink"] as const) {
+    for (const style of ["pixel", "paper", "clay", "ink"] as const) {
       city.apply({ ...INITIAL_SETTINGS, style });
       context.apply({ ...INITIAL_SETTINGS, style });
       const nearWater = city.root.getObjectByName("water")!

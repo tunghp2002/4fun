@@ -102,6 +102,17 @@ test("street cameras and furniture follow actual roads without entering footprin
     assert(counts.cars > 0);
     assert(counts.scooters > 0);
     assert(counts.poles > 0);
+    const pools = streets.root.getObjectByName("Night_street_lights") as THREE.InstancedMesh;
+    const lamp = streets.root.getObjectByName("Street_lamp") as THREE.Mesh;
+    const lampMaterial = lamp.material as THREE.MeshStandardMaterial;
+    assert.equal(pools.count, counts.poles);
+    assert.equal(pools.visible, false);
+    streets.apply("pixel", 0.38, true);
+    assert.equal(pools.visible, true);
+    assert(lampMaterial.emissiveIntensity > 0);
+    streets.apply("pixel", 0.38, false);
+    assert.equal(pools.visible, false);
+    assert.equal(lampMaterial.emissiveIntensity, 0);
     assert(counts.sidewalks > 0);
     for (const placement of streets.root.userData.placements) {
       assert(!streets.blocked(placement.x, placement.z));

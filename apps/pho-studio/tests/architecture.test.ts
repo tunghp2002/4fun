@@ -113,7 +113,7 @@ test("a house crossing the detail boundary keeps its whole roof and is rendered 
       ) < 0.001,
     );
     assert(mesh.castShadow && mesh.receiveShadow);
-    for (const style of ["paper", "clay", "ink"] as SceneStyle[]) {
+    for (const style of ["pixel", "paper", "clay", "ink"] as SceneStyle[]) {
       near.apply({ ...INITIAL_SETTINGS, style });
       far.apply({ ...INITIAL_SETTINGS, style });
       const tone = buildingDesign(
@@ -137,6 +137,19 @@ test("a house crossing the detail boundary keeps its whole roof and is rendered 
             Math.abs(b.getZ(i) - expected.b) < 1e-6,
         ),
       );
+    }
+    const nearWindows: THREE.MeshStandardMaterial[] = [];
+    near.root.traverse((object) => {
+      if (object instanceof THREE.Mesh && !Array.isArray(object.material) && object.material.name === "facade-windows")
+        nearWindows.push(object.material);
+    });
+    assert(nearWindows.length > 0);
+    const farWindows = (far.root.getObjectByName("Context_windows") as THREE.Mesh).material as THREE.MeshStandardMaterial;
+    for (const night of [true, false, true, false]) {
+      near.apply({ ...INITIAL_SETTINGS, night });
+      far.apply({ ...INITIAL_SETTINGS, night });
+      assert.equal(nearWindows[0].emissiveIntensity, night ? 1.2 : 0);
+      assert.equal(farWindows.emissiveIntensity, night ? 1.2 : 0);
     }
     far.apply({ ...INITIAL_SETTINGS, buildings: false });
     assert.equal(far.root.getObjectByName("Context_windows")!.visible, false);

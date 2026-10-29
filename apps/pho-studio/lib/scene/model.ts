@@ -781,7 +781,7 @@ export async function buildCity(
           seed,
         );
         fadeDistantLines(next.root);
-        if (lastSettings) next.apply(lastSettings.style, lastSettings.outlines);
+        if (lastSettings) next.apply(lastSettings.style, lastSettings.outlines, lastSettings.night);
         details?.dispose();
         details?.root.removeFromParent();
         details = next;
@@ -802,9 +802,11 @@ export async function buildCity(
       },
       apply(settings) {
         lastSettings = settings;
-        street.apply(settings.style, settings.outlines);
+        street.apply(settings.style, settings.outlines, settings.night);
         landmarks.apply(settings);
-        details?.apply(settings.style, settings.outlines);
+        details?.apply(settings.style, settings.outlines, settings.night);
+        windowMaterial.emissive.set("#ffbd66");
+        windowMaterial.emissiveIntensity = settings.night ? 1.2 : 0;
         const palette = PALETTES[settings.style];
         root.scale.y = settings.heightScale;
         layers.buildings.visible = settings.buildings;

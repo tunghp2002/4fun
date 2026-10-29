@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { contains, random, type Point } from "../geo/coordinates";
+import type { SceneStyle } from "../types";
+import { windowGlow } from "./night";
 
 export interface FacadeBuilding {
   id: number;
@@ -12,9 +14,14 @@ export interface FacadeBuilding {
   fronts?: number[];
 }
 
-type Style = "paper" | "clay" | "ink";
 // Color slots are shared by geometry and lettering, so all exports retain the shop fronts.
-const PALETTES: Record<Style, string[]> = {
+const PALETTES: Record<SceneStyle, string[]> = {
+  pixel: [
+    "#f0eee1", "#b8b3a3", "#537e96", "#233d56",
+    "#8d5940", "#81929c", "#38766c", "#c65d40",
+    "#dbad55", "#f1edda", "#b4ccd6", "#9eac99",
+    "#c65d40", "#d28354", "#66788c", "#b9b4a5",
+  ],
   paper: [
     "#eee4c9",
     "#b6a489",
@@ -707,6 +714,7 @@ export function createFacadeDetails(buildings: FacadeBuilding[], seed: number) {
     metalness: 0.05,
   });
   const mesh = new THREE.Mesh(geometry, material);
+  const glow = windowGlow(material, geometry, tones.map((tone) => tone === 2 ? 1 : 0));
   mesh.name = "Khung_cua_ban_cong_bien_hieu";
   mesh.castShadow = mesh.receiveShadow = true;
   root.add(mesh);
@@ -728,10 +736,11 @@ export function createFacadeDetails(buildings: FacadeBuilding[], seed: number) {
   root.userData.parts = boxes;
   root.userData.vertices = positions.length / 3;
   root.userData.drawCalls = 2;
-  let currentStyle: Style | undefined,
+  let currentStyle: SceneStyle | undefined,
     disposed = false;
-  function apply(style: Style, outlines = 0.55) {
+  function apply(style: SceneStyle, outlines = 0.55, night = false) {
     if (disposed) return;
+    glow(night);
     if (currentStyle !== style) {
       currentStyle = style;
       const palette = PALETTES[style].map((color) => new THREE.Color(color));

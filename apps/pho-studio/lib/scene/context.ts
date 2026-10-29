@@ -35,6 +35,7 @@ const colors = (p: typeof PALETTES.paper) => [
   p.window,
 ];
 const COLORS = {
+  pixel: colors(PALETTES.pixel),
   paper: colors(PALETTES.paper),
   clay: colors(PALETTES.clay),
   ink: colors(PALETTES.ink),
@@ -219,13 +220,14 @@ export async function buildContext(
       ],
     ],
   ];
-  const groups = new Map<string, { positions: number[]; tones: number[] }[]>();
+  const groups = new Map<string, { positions: number[]; tones: number[]; origins: number[] }[]>();
+  let revealOrigin = [0, 0, 0, 0];
   const bucket = (name: string) => {
     let chunks = groups.get(name);
     if (!chunks) groups.set(name, (chunks = []));
     let result = chunks[chunks.length - 1];
     if (!result || result.positions.length >= 180000) {
-      result = { positions: [], tones: [] };
+      result = { positions: [], tones: [], origins: [] };
       chunks.push(result);
     }
     return result;
@@ -240,6 +242,8 @@ export async function buildContext(
     const item = bucket(name);
     item.positions.push(...a, ...b, ...c);
     item.tones.push(tone, tone, tone);
+    if (name === "buildings" || name === "windows")
+      item.origins.push(...revealOrigin, ...revealOrigin, ...revealOrigin);
   }
   function polygon(
     name: string,
@@ -381,6 +385,9 @@ export async function buildContext(
           base = footing.high + profile.minimum + 0.2,
           bottom = profile.minimum === 0 ? footing.low + 0.1 : base,
           tone = 1 + profile.tone;
+        const minX = Math.min(...points.map((p) => p[0])), maxX = Math.max(...points.map((p) => p[0])),
+          minZ = Math.min(...points.map((p) => p[1])), maxZ = Math.max(...points.map((p) => p[1]));
+        revealOrigin = [(minX + maxX) / 2, bottom, (minZ + maxZ) / 2, Math.max(maxX - minX, maxZ - minZ) / 2];
         if (profile.pitched) {
           const roof = gabledRoof(points, base + h, profile.roof);
           const p = roof.geometry.getAttribute("position");
@@ -558,7 +565,9 @@ export async function buildContext(
           "tone",
           new THREE.Float32BufferAttribute(item.tones, 1),
         );
-        item.positions.length = item.tones.length = 0;
+        if (item.origins.length)
+          geometry.setAttribute("revealOrigin", new THREE.Float32BufferAttribute(item.origins, 4));
+        item.positions.length = item.tones.length = item.origins.length = 0;
         const compact = mergeVertices(geometry);
         geometry.dispose();
         geometry = compact;
@@ -608,6 +617,9 @@ export async function buildContext(
         }
         root.scale.y = settings.heightScale;
         for (const object of objects) {
+          const material = object.mesh.material as THREE.MeshStandardMaterial;
+          material.emissive.set("#ffbd66");
+          material.emissiveIntensity = settings.night && object.name === "windows" ? 1.2 : 0;
           object.mesh.visible =
             object.name === "buildings" || object.name === "windows"
               ? settings.buildings

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import type { SceneStyle } from "../../types";
 import { PALETTES } from "../architecture";
+import { windowGlow } from "../night";
 export type Tone =
   | "stone"
   | "cream"
@@ -44,7 +45,7 @@ export interface LandmarkAsset {
   width: number;
   depth: number;
   height: number;
-  apply(style: SceneStyle, outlines: number): void;
+  apply(style: SceneStyle, outlines: number, night?: boolean): void;
   dispose(): void;
 }
 // Units are meters; +Z is the front. Roof Y is the eave; arch Y is the bottom.
@@ -247,6 +248,7 @@ export class LandmarkBuilder {
       for (let i = 0; i < n; i++)
         values.set([color.r, color.g, color.b], i * 3);
       item.geometry.setAttribute("color", new THREE.BufferAttribute(values, 3));
+      item.geometry.setAttribute("windowGlow", new THREE.Float32BufferAttribute(new Float32Array(n).fill(item.tone === "glass" ? 1 : 0), 1));
     }
     const geometry =
       mergeGeometries(this.items.map((i) => i.geometry)) ??
@@ -274,6 +276,7 @@ export class LandmarkBuilder {
       side: THREE.DoubleSide,
     });
     const mesh = new THREE.Mesh(geometry, material);
+    const glow = windowGlow(material, geometry, geometry.getAttribute("windowGlow").array);
     mesh.name = this.name + "_architecture";
     mesh.castShadow = mesh.receiveShadow = true;
     root.add(mesh);
@@ -289,6 +292,9 @@ export class LandmarkBuilder {
     edges.name = this.name + "_contours";
     root.add(edges);
     geometry.computeBoundingBox();
+    const bounds = geometry.boundingBox!;
+    const revealOrigin = [(bounds.min.x + bounds.max.x) / 2, bounds.min.y, (bounds.min.z + bounds.max.z) / 2, Math.hypot(bounds.max.x - bounds.min.x, bounds.max.z - bounds.min.z) / 2];
+    geometry.userData.revealOrigin = edgeGeometry.userData.revealOrigin = revealOrigin;
     const height = geometry.boundingBox?.max.y ?? 1;
     root.userData = {
       illustrative: true,
@@ -304,7 +310,8 @@ export class LandmarkBuilder {
       width,
       depth,
       height,
-      apply(style, outlines) {
+      apply(style, outlines, night = false) {
+        glow(night);
         edgeMaterial.color.set(
           style === "ink"
             ? "#1e2720"
@@ -320,6 +327,11 @@ export class LandmarkBuilder {
         for (const count of counts) {
           const color = new THREE.Color(COLORS[count.tone]);
           if (count.tone === "water") color.set(PALETTES[style].water);
+          else if (style === "pixel") {
+            if (count.tone === "green") color.set(PALETTES.pixel.foliage[1]);
+            else if (count.tone === "glass") color.set(PALETTES.pixel.window);
+            else color.offsetHSL(0, 0.08, 0.015);
+          }
           else if (style === "clay")
             color.lerp(new THREE.Color("#f0eee5"), 0.82);
           else if (style === "ink") {

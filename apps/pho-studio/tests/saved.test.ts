@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { readSaved, saveScenes, type SavedScene } from "../lib/saved.ts";
 import { PLACES } from "../lib/places.ts";
 import { INITIAL_SETTINGS } from "../lib/types.ts";
+import { normalizeSettings } from "../lib/settings.ts";
 
 test("corrupted saved scenes are rejected or normalized without breaking startup", () => {
   const original = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
@@ -31,7 +32,7 @@ test("corrupted saved scenes are rejected or normalized without breaking startup
     ]);
     const saved = readSaved();
     assert.equal(saved.length, 1);
-    assert.equal(saved[0].settings.style, "paper");
+    assert.equal(saved[0].settings.style, INITIAL_SETTINGS.style);
     assert.equal(saved[0].settings.hour, 18);
     assert.equal(saved[0].settings.heightScale, 0.5);
     assert.equal(saved[0].settings.trees, true);
@@ -49,4 +50,15 @@ test("corrupted saved scenes are rejected or normalized without breaking startup
     if (original) Object.defineProperty(globalThis, "localStorage", original);
     else Reflect.deleteProperty(globalThis, "localStorage");
   }
+});
+
+test("pixel and legacy palettes survive saved scene serialization", () => {
+  for (const style of ["pixel", "paper", "clay", "ink"] as const) {
+    const settings = { ...INITIAL_SETTINGS, style, outlines: 0.2, night: true };
+    assert.deepEqual(normalizeSettings(JSON.parse(JSON.stringify(settings))), settings);
+  }
+  assert.equal(normalizeSettings({ style: "unknown" }).style, "pixel");
+  assert.equal(normalizeSettings({}).night, false);
+  assert.equal(normalizeSettings({ night: "true" }).night, false);
+  assert.equal(normalizeSettings({ night: true, hour: 16.5 }).hour, 16.5);
 });

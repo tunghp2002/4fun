@@ -208,6 +208,12 @@ test("foliage follows the camera within its budget, preserves every tree and exp
       );
     }
     assert(near.instanceColor && far.instanceColor);
+    for (const mesh of [near, far]) {
+      const colors = mesh.geometry.getAttribute("color");
+      assert.equal(colors.count, mesh.geometry.getAttribute("position").count);
+      assert(new Set(colors.array).size > 8, "leaf texture must vary without adding draw calls");
+      assert(Array.from(colors.array).every((value) => value > 0.7 && value <= 1.1));
+    }
     const original = near.instanceColor.getX(0);
     vegetation.apply(
       { foliage: ["#eeeedd"], trunk: "#777766", edge: "#222211" },

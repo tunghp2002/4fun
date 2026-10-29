@@ -21,6 +21,7 @@ import {
 import { cameraFrame, cameraNear } from "./camera";
 import { createFinish } from "./finish";
 import type { CityContext } from "./context";
+import { createReveal, type RevealArea } from "./reveal";
 
 export interface CameraState {
   view?: CameraView;
@@ -77,18 +78,21 @@ export function createStage(
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.95;
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.shadowMap.autoUpdate = false;
   const scene = new THREE.Scene(),
     camera = new THREE.PerspectiveCamera(38, 1, 0.12, 18000);
   const skyCanvas = document.createElement("canvas");
-  skyCanvas.width = 4;
+  skyCanvas.width = 512;
   skyCanvas.height = 256;
   const sky = new THREE.CanvasTexture(skyCanvas);
   sky.colorSpace = THREE.SRGBColorSpace;
   scene.background = sky;
   let skyStyle = "";
   const finish = createFinish(renderer, scene, camera);
+  const reveal = createReveal(), reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let revealActive = false;
+  let revealedArea: { center: Coordinate; span: number } | undefined;
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = !matchMedia("(prefers-reduced-motion: reduce)")
     .matches;
@@ -111,6 +115,7 @@ export function createStage(
   );
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
+  floor.visible = false;
   scene.add(floor);
   const grid = new THREE.GridHelper(1800, 36, "#8e9a88", "#adb3a3");
   grid.visible = false;
@@ -215,6 +220,10 @@ export function createStage(
       moveEye(delta);
       moving = true;
     }
+    const wasRevealing = revealActive;
+    if (reducedMotion.matches) { reveal.finish(); revealActive = false; }
+    else revealActive = reveal.update(now);
+    if (wasRevealing || revealActive) renderer.shadowMap.needsUpdate = true;
     const changed = currentView !== "eye" && controls.update(dt);
     if (currentView === "eye") camera.lookAt(controls.target);
     fitClipping();
@@ -228,7 +237,7 @@ export function createStage(
       );
     moved();
     finish.render();
-    if (changed || moving) request();
+    if (changed || moving || revealActive) request();
   };
   function fitClipping() {
     const ground = model
@@ -266,6 +275,7 @@ export function createStage(
     finish.resize(width, height, renderer.getPixelRatio());
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    applyLight();
     request();
   };
   const observer = new ResizeObserver(resize);
@@ -424,7 +434,7 @@ export function createStage(
   window.addEventListener("blur", blur);
   function applyLight() {
     if (!settings || !map) return;
-    const angle = ((settings.hour - 6) / 12) * Math.PI,
+    const angle = settings.night ? Math.PI * 0.65 : ((settings.hour - 6) / 12) * Math.PI,
       span = map.span;
     sun.position
       .set(
@@ -434,40 +444,63 @@ export function createStage(
       )
       .add(sun.target.position);
     sun.color.set(
-      settings.style === "ink"
+      settings.night ? "#a6c2ff" : settings.style === "ink"
         ? "#ffffff"
         : settings.hour > 16
           ? "#ffd4a0"
           : "#fff4e4",
     );
-    sun.intensity = settings.style === "ink" ? 2.8 : 2.6;
-    ambient.intensity = settings.style === "ink" ? 0.95 : 1.2;
+    sun.intensity = settings.night ? 0.8 : settings.style === "pixel" ? 3 : settings.style === "ink" ? 2.8 : 2.6;
+    ambient.intensity = settings.night ? 0.65 : settings.style === "paper" || settings.style === "clay" ? 1.2 : 0.95;
+    ambient.color.set(settings.night ? "#6c8ac4" : settings.style === "pixel" ? "#c4ddff" : "#ffffff");
+    ambient.groundColor.set(settings.night ? "#243650" : settings.style === "pixel" ? "#657b98" : "#b6aa8f");
     const background =
-      settings.style === "ink"
+      settings.night ? "#17253d" : settings.style === "ink"
         ? "#faf9f5"
         : settings.style === "clay"
           ? "#eeeee8"
-          : "#e0e8df";
-    if (skyStyle !== settings.style) {
-      skyStyle = settings.style;
+          : settings.style === "pixel" ? "#dce8ea" : "#e0e8df";
+    const skyKey = `${settings.style}-${settings.night}-${camera.aspect.toFixed(2)}`;
+    if (skyStyle !== skyKey) {
+      skyStyle = skyKey;
       const ctx = skyCanvas.getContext("2d")!;
       const gradient = ctx.createLinearGradient(0, 0, 0, skyCanvas.height);
       gradient.addColorStop(
         0,
-        settings.style === "paper" ? "#92b6c5" : background,
+        settings.night ? "#070e20" : settings.style === "pixel" ? "#9fcae5" : settings.style === "paper" ? "#92b6c5" : background,
       );
       gradient.addColorStop(0.68, background);
       gradient.addColorStop(1, background);
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, skyCanvas.width, skyCanvas.height);
+      if (settings.night) {
+        for (let i = 1; i <= 48; i++) {
+          const x = ((i * 137.508) % 512), y = ((i * 43.73) % 140);
+          ctx.fillStyle = i % 3 ? "#a7bfe090" : "#ecf3ff";
+          ctx.fillRect(x, y, 1, 1);
+        }
+        ctx.save();
+        ctx.translate(410, 38);
+        ctx.scale(1, camera.aspect / 2);
+        const glow = ctx.createRadialGradient(0, 0, 2, 0, 0, 16);
+        glow.addColorStop(0, "#e5edff70");
+        glow.addColorStop(1, "#d6e5ff00");
+        ctx.fillStyle = glow;
+        ctx.fillRect(-16, -16, 32, 32);
+        ctx.beginPath();
+        ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = "#e6efff";
+        ctx.fill();
+        ctx.restore();
+      }
       sky.needsUpdate = true;
     }
     scene.fog = new THREE.Fog(
       background,
-      span * 0.65,
-      Math.max(1500, span * 2.2),
+      span * (settings.style === "pixel" ? 1.8 : 0.65),
+      Math.max(1500, span * (settings.style === "pixel" ? 5 : 2.2)),
     );
-    finish.update(settings.style, settings.shadows, settings.outlines);
+    finish.update(settings.style, settings.shadows, settings.outlines, settings.night);
     renderer.shadowMap.enabled = settings.shadows;
     sun.castShadow = settings.shadows;
     grid.visible = settings.grid;
@@ -486,8 +519,8 @@ export function createStage(
         map.span,
         (context?.root.userData.extentMeters ?? map.span) / 2,
       );
-      scene.fog.near = extent * 0.65 + altitude * 0.8;
-      scene.fog.far = Math.max(1500, extent * 2.2) + altitude * 1.8;
+      scene.fog.near = extent * (settings.style === "pixel" ? 1.8 : 0.65) + altitude * 0.8;
+      scene.fog.far = Math.max(1500, extent * (settings.style === "pixel" ? 5 : 2.2)) + altitude * 1.8;
     }
     const half =
       altitude < 45
@@ -539,6 +572,8 @@ export function createStage(
     camera,
     scene,
     setCity(next, data, elevation, travel = false) {
+      reveal.finish();
+      revealActive = false;
       const previous =
         travel && map && terrain
           ? rebaseCamera(
@@ -554,6 +589,7 @@ export function createStage(
         map?.span === data.span &&
         map.center.lat === data.center.lat &&
         map.center.lon === data.center.lon;
+      if (!travel && !sameArea) revealedArea = undefined;
       if (model) {
         scene.remove(model.root);
         model.dispose();
@@ -572,6 +608,7 @@ export function createStage(
       pin = null;
       onPin(null);
       const size = data.span;
+      floor.visible = true;
       floor.position.y = -Math.max(12, size * 0.018) - 0.3;
       Object.assign(sun.shadow.camera, {
         left: -size * 0.7,
@@ -615,6 +652,18 @@ export function createStage(
       request();
     },
     setContext(next) {
+      reveal.finish();
+      revealActive = false;
+      const covered: RevealArea[] = [];
+      if (map) {
+        const half = map.span / 2;
+        covered.push([-half, -half, half, half]);
+        if (revealedArea) {
+          const [x, z] = project(revealedArea.center, map.center), radius = revealedArea.span / 2;
+          covered.push([x - radius, z - radius, x + radius, z + radius]);
+        }
+        revealedArea = { center: map.center, span: next.root.userData.extentMeters };
+      }
       if (context) {
         scene.remove(context.root);
         context.dispose();
@@ -622,6 +671,8 @@ export function createStage(
       context = next;
       scene.add(next.root);
       if (settings) next.apply(settings);
+      if (!reducedMotion.matches && next.root.userData.extentMeters <= 8800)
+        revealActive = reveal.start(next.root, covered, performance.now());
       onLandmarks([...(model?.landmarks ?? []), ...next.landmarks]);
       fitShadow();
       request();
@@ -862,6 +913,8 @@ export function createStage(
       request();
     },
     async png(exportWidth, title) {
+      reveal.finish();
+      revealActive = false;
       refreshDetails();
       const w = Math.max(800, Math.min(3840, exportWidth)),
         h = Math.round((w * height) / width),
@@ -910,6 +963,8 @@ export function createStage(
       }
     },
     getModel() {
+      reveal.finish();
+      revealActive = false;
       refreshDetails();
       if (!model) return;
       const root = new THREE.Group();
@@ -922,6 +977,7 @@ export function createStage(
     dispose() {
       if (disposed) return;
       disposed = true;
+      reveal.finish();
       cancelAnimationFrame(frame);
       clearTimeout(detailTimer);
       observer.disconnect();
