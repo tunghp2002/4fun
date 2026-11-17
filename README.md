@@ -41,6 +41,9 @@ Open `http://localhost:3012`. See the app's README for controls, scope and perfo
 | Nếp Núi — Vietnamese Rice Terraces | [Open file](scenes/vietnam-terraces/index.html) | [Generation prompt](scenes/vietnam-terraces/PROMPT.md) | [Overview](scenes/vietnam-terraces/images/preview.png) · [Detail](scenes/vietnam-terraces/images/detail.png) · [Buffalo](scenes/vietnam-terraces/images/buffalo.png) · [Rain](scenes/vietnam-terraces/images/rain.png) |
 | Yozakura — Cherry Blossoms After Dark | [Open file](scenes/yozakura/index.html) | [Generation prompt](scenes/yozakura/PROMPT.md) | [Overview](scenes/yozakura/images/preview.png) · [Blossoms](scenes/yozakura/images/blossoms.png) · [Water](scenes/yozakura/images/water.png) · [Petals](scenes/yozakura/images/petals.png) |
 | Nordlys — Aurora Harbor | [Open file](scenes/aurora-harbor/index.html) | [Generation prompt](scenes/aurora-harbor/PROMPT.md) | [Overview](scenes/aurora-harbor/images/preview.png) · [Aurora](scenes/aurora-harbor/images/aurora.png) · [Boat](scenes/aurora-harbor/images/boat.png) · [Cabin](scenes/aurora-harbor/images/cabin.png) |
+| Hanabi — Pastel Beach Fireworks | [Open file](scenes/hanabi-beach/index.html) | [Generation prompt](scenes/hanabi-beach/PROMPT.md) | [Overview](scenes/hanabi-beach/images/preview.png) · [Fireworks](scenes/hanabi-beach/images/fireworks.png) · [Beach](scenes/hanabi-beach/images/detail.png) · [Food kiosk](scenes/hanabi-beach/images/kiosk.png) |
+| Hotaru — Forest Firefly Shrine | [Open file](scenes/firefly-shrine/index.html) | [Generation prompt](scenes/firefly-shrine/PROMPT.md) | [Overview](scenes/firefly-shrine/images/preview.png) · [Shrine](scenes/firefly-shrine/images/shrine.png) · [Fireflies](scenes/firefly-shrine/images/fireflies.png) · [Bridge](scenes/firefly-shrine/images/bridge.png) |
+| Koyo — Autumn Tea Garden | [Open file](scenes/koyo-tea-garden/index.html) | [Generation prompt](scenes/koyo-tea-garden/PROMPT.md) | [Overview](scenes/koyo-tea-garden/images/preview.png) · [Koi](scenes/koyo-tea-garden/images/koi.png) · [Tea house](scenes/koyo-tea-garden/images/tea-house.png) · [Bridge](scenes/koyo-tea-garden/images/bridge.png) |
 
 ![A Japanese convenience-store miniature on a rainy night](scenes/rainy-konbini/images/preview.png)
 
@@ -51,6 +54,12 @@ Open `http://localhost:3012`. See the app's README for controls, scope and perfo
 ![Illuminated cherry blossoms, a footbridge and dark water in a night-garden miniature](scenes/yozakura/images/preview.png)
 
 ![Snowy red cabins, a moored fishing boat and moving northern lights reflected in an Arctic harbor](scenes/aurora-harbor/images/preview.png)
+
+![Pastel anime fireworks above a miniature beach festival with lanterns and sea reflections](scenes/hanabi-beach/images/preview.png)
+
+![A warm forest shrine, stone bridge and golden fireflies beneath dense teal canopies](scenes/firefly-shrine/images/preview.png)
+
+![Autumn maples and a furnished tea house beside clear water with detailed swimming koi](scenes/koyo-tea-garden/images/preview.png)
 
 ## View a scene
 

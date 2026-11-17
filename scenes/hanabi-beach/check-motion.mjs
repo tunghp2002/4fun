@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
+const start=html.indexOf('const SHOW_PERIOD='),end=html.indexOf('// End motion helpers',start);
+assert.ok(start>=0&&end>start,'The offline HTML must embed the shared motion functions');
+const {sparkAt,shellAt}=new Function(html.slice(start,end)+';return {sparkAt,shellAt};')();
+const star={vx:3,vy:4,vz:-2,drag:.4,gravity:1.35},origin=[2,18,-10],out=[];
+assert.deepEqual(sparkAt(star,0,origin,out),origin);
+const a=sparkAt(star,.001,origin,[]),b=sparkAt(star,.002,origin,[]);
+assert.ok(Math.abs((a[0]-origin[0])/.001-3)<.01);
+assert.ok(b[1]>a[1]&&sparkAt(star,5,origin,[])[1]<sparkAt(star,2,origin,[])[1]);
+assert.ok(sparkAt(star,3,origin,[])[0]-origin[0]<star.vx*3);
+const shell={launch:[-8,.8,-13],origin:[-7,20,-11],fuse:2};
+assert.deepEqual(shellAt(shell,0,[]),shell.launch);
+assert.deepEqual(shellAt(shell,2,[]),shell.origin);
+assert.ok(shellAt(shell,1.99,[])[1]-shellAt(shell,1.98,[])[1]<shellAt(shell,.02,[])[1]-shellAt(shell,.01,[])[1]);
+for(let t=0;t<5;t+=.02)assert.ok(sparkAt(star,t,origin,[]).every(Number.isFinite));
+console.log('PASS Shared trajectories: exact launch/burst endpoints, slowing ascent, drag, gravity and finite continuous positions.');

@@ -1,0 +1,128 @@
+{
+  "checks": [
+    "Complete square forest, connected bridge and stairs, grounded fixtures and dense planting",
+    "No visible interface and a focusable accessible scene",
+    "Complete base and canopies fit the desktop opening view",
+    "Every tree has a distinct crown size, height, lean and branch orientation",
+    "All firefly flight envelopes avoid architecture, trunks and the plinth boundary",
+    "Two minutes of flight stay continuous and include independent dim and bright phases",
+    "Two minutes of animation preserve geometry, texture and particle pools",
+    "Actual firefly, current and mist pixels evolve smoothly with a stationary camera",
+    "Live stream reflection changes while the camera remains still",
+    "Mouse drag orbits",
+    "Right drag pans",
+    "Scroll zooms",
+    "Home restores the opening view and keyboard arrows orbit",
+    "The scene animates and Space pauses and resumes it",
+    "Reduced motion stops idle rendering while navigation remains available",
+    "Close, reverse and overhead views preserve scene resources",
+    "One bounded reflection shares the animation clock",
+    "Portrait view fits the base and foliage with device pixel ratio capped at 1.6",
+    "Portrait framing compensates fog density and landscape rotation restores it",
+    "One-finger touch orbits",
+    "Two-finger pinch zooms",
+    "Hidden pages pause rendering",
+    "The offline file makes no HTTP requests and raises no browser errors"
+  ],
+  "errors": [],
+  "network": [],
+  "audit": {
+    "findings": [],
+    "base": {
+      "width": 30,
+      "depth": 30
+    },
+    "trees": 11,
+    "clusters": 99,
+    "leaves": 15840,
+    "grassBlades": 19934,
+    "ferns": 148,
+    "fireflies": 280,
+    "lanterns": 6,
+    "bridge": {
+      "start": 3.55,
+      "end": 9.35,
+      "width": 2.5,
+      "clearWidth": 2.18
+    },
+    "stair": {
+      "count": 8,
+      "width": 2.6,
+      "start": 0.3,
+      "end": -3.5,
+      "bottom": 1.53,
+      "top": 2.7
+    },
+    "gate": {
+      "x": 0,
+      "z": 1.9,
+      "base": 1.53,
+      "opening": 3.15,
+      "height": 4.25
+    },
+    "court": {
+      "minX": -4.6,
+      "maxX": 4.6,
+      "minZ": -11.2,
+      "maxZ": -3.5,
+      "top": 2.7
+    },
+    "stats": {
+      "calls": 251,
+      "triangles": 528728,
+      "geometries": 25,
+      "textures": 5
+    }
+  },
+  "flight": {
+    "finite": true,
+    "insideBase": true,
+    "clearSolids": true,
+    "minGroundClearance": 0.2421080503735089,
+    "maxStep": 0.2234717449088338,
+    "minGlow": 0.08,
+    "maxGlow": 0.9999999989559458
+  },
+  "motion": {
+    "near": 0.032026948462774874,
+    "far": 0.661353065900619,
+    "mirror": 0.0003528193508585294
+  },
+  "resources": {
+    "ids": [
+      "0371da42-c0d3-4e9e-b2c6-e7b44cc6dc7d",
+      "0a303000-51f3-4b18-86d8-06f4533a0d02",
+      "1dbf6cea-705f-4e27-abd4-2d934b668e01",
+      "23e2c75f-ae26-4c46-9467-71b09903e53d",
+      "285efc3d-cdb9-4a36-89ad-b475bfe5ef5e",
+      "2f37c7e2-2e54-45d7-8516-0452c15d5b5d",
+      "2fc4f31b-488a-438f-b7e4-89f856ad640e",
+      "371f5860-f9a5-42ec-bc41-71adac12d007",
+      "4c1a76a4-a7bf-465b-9d5e-05416c0ca89c",
+      "5ef2b311-f96f-44fa-a68b-7a3aef30c6b7",
+      "61b35153-46b7-4042-bda3-558e3a91e9ec",
+      "6ae5ff78-f075-433c-b354-cc4dc71738a5",
+      "78a150cc-7837-4035-abe6-37cf8bd3d673",
+      "7cba95a3-8c1f-45ae-b8ac-68ef1847b5d3",
+      "7ed32b94-11bd-4d88-8a09-1ccf3d7bde4c",
+      "889c1128-2f18-46d4-974e-01d8ae7d10fc",
+      "b27c8c65-852b-4e91-9fec-d81be1b315d9",
+      "c1307156-2916-433c-b982-17ef47390010",
+      "c24db5d2-5321-4cc6-9ce8-43c29a6dc0a9",
+      "d2c7c2ed-0943-4b24-b76c-0e8bdb3f9e3e",
+      "d4448e89-516a-45fd-b9cb-5cb08d3d357a",
+      "f072028b-f443-4b32-875c-21a3c5803bd8",
+      "f73ef83f-c6b5-4c18-ac7d-9ed110fc4752",
+      "fac66fe2-413e-4355-9071-0c5f261445ed",
+      "fc83fa63-76ec-4cab-ac52-59c8c43d733f"
+    ],
+    "geometries": 25,
+    "textures": 5,
+    "flies": 280
+  },
+  "htmlHash": "3ea7c7ee57820abc6b5e9d30a19dce91f3922fabdbfb7cd3f81049dc5de6fee8",
+  "unchecked": [
+    "Real-device GPU frame rate",
+    "Other browser engines"
+  ]
+}

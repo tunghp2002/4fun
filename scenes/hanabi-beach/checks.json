@@ -1,0 +1,114 @@
+{
+  "checks": [
+    "Complete beach, supported kiosks, clear boardwalk, grounded palms and offshore platforms",
+    "No visible interface and a focusable accessible canvas",
+    "Complete square base fits the desktop framing",
+    "A full show has finite bounded particles that extinguish above the sea",
+    "The complete fireworks sequence fits the opening camera",
+    "A full show reuses its particle and trail buffers",
+    "Actual fireworks pixels change smoothly between nearby frames and evolve over time",
+    "The raw live reflection changes without camera movement",
+    "Launches precede expanding bursts with trailing embers",
+    "Mouse drag orbits",
+    "Right drag pans",
+    "Scroll zooms",
+    "Home resets exactly and keyboard arrows orbit",
+    "Animation runs and Space pauses and resumes it",
+    "Reduced motion stops idle rendering and keeps navigation available",
+    "Detail, opposite, overhead and later-show views keep the resource pool fixed",
+    "One bounded live mirror shares the show clock",
+    "Portrait framing fits and pixel ratio is capped at 1.6",
+    "One-finger touch orbits",
+    "Two-finger pinch zooms",
+    "Visibility handling pauses hidden pages",
+    "Offline HTML makes no HTTP requests and reports no browser errors"
+  ],
+  "errors": [],
+  "network": [],
+  "audit": {
+    "findings": [],
+    "shops": 2,
+    "palms": 4,
+    "benches": 3,
+    "barges": 3,
+    "events": 24,
+    "capacity": 4114,
+    "heads": 470,
+    "trailSegments": 5640,
+    "activeBursts": 3,
+    "base": {
+      "width": 32,
+      "depth": 32
+    },
+    "boardwalk": {
+      "width": 2.4,
+      "top": 1.29
+    },
+    "stats": {
+      "calls": 330,
+      "triangles": 200353,
+      "geometries": 35,
+      "textures": 9
+    }
+  },
+  "timeline": {
+    "finite": true,
+    "minY": 0.9700000286102295,
+    "maxHeads": 537,
+    "maxLines": 6444,
+    "maxScreenX": 0.6197430154289909,
+    "maxScreenY": 0.8436737400979614
+  },
+  "motion": {
+    "near": 0.6446932006633499,
+    "far": 5.161809997630893,
+    "reflection": 0.014563298771778742
+  },
+  "resources": {
+    "ids": [
+      "07e83f88-dc4a-4fb2-834f-0ae91101d09f",
+      "0a9aa460-c707-449a-bad6-c97325e1b226",
+      "178b4dff-8e78-42c8-9726-ec2cec15464e",
+      "3174beef-78d4-4873-97df-3912eaa3ae89",
+      "335e14d0-759f-4a4b-a69e-f6e64e005ac4",
+      "34f0b8fc-9049-4010-99f8-fac0ae3e7ed6",
+      "3d3f2039-02ec-403a-850c-17e69402c28d",
+      "3fd31402-1d32-4eb0-873e-1fca769f58d6",
+      "43d71258-47a1-495a-a165-558b6b0c33f9",
+      "449731bb-6531-4ee8-be65-bf1e2fe4f55d",
+      "4df1182d-8880-4463-ada0-738fdd79035d",
+      "59634844-8ca4-48eb-b04b-a93e96904788",
+      "6ca0369e-dae0-4bb6-a903-841404f6b65c",
+      "717c66fc-5c31-47ef-bc81-865573cedc9f",
+      "7d029ad6-b5e7-4c17-9b43-b8b22bfda8f2",
+      "7ec11c53-3fe5-498a-80ce-6ff7f828f7e9",
+      "81c59fb9-2191-40e7-92ff-92639a79226e",
+      "91ac5c17-c357-40fc-b992-3d1e34ba1746",
+      "98b8d98c-aba4-4046-b19c-c95e46ea4132",
+      "9a95cd96-be24-4c89-9b0d-4c01fec8c0f7",
+      "ba489fbe-8e57-44a8-8a32-f65264ed4a72",
+      "bd75277b-9e02-4b32-87c1-de7bf25bbc4e",
+      "becc67c6-3725-4115-a82f-241b66160319",
+      "ca8cf0e1-fca0-4e9d-bbc3-bd5e006c32c1",
+      "db5e328d-49ab-431b-a95e-2281e29298ef",
+      "dcc8a2e9-daac-4219-88e9-95c6e3da5017",
+      "e0fbaddc-9799-49b4-9df7-c35219bde71a",
+      "e299fd94-c04a-4486-857a-3bd2fb98e2d1",
+      "edb9cc10-10a7-449b-bb68-66cc51f9f4e9",
+      "ef4416d1-b9ad-44bb-8550-c5ef8aeef46e",
+      "f789b91d-dc7a-449c-b6f2-5af97ca5c59a",
+      "fa9fc8e3-d9fb-4161-94a2-55133e80d7d3",
+      "fb160485-7e2e-4dc5-be72-f51fc1c95b39",
+      "fe65267f-200d-470b-9fd9-a8fc61004fc8",
+      "fffb0169-db42-4fbc-a077-ec811008f2c0"
+    ],
+    "geometries": 35,
+    "textures": 9,
+    "capacity": 4114
+  },
+  "htmlHash": "3a5460b5a7c83a73c760b2502c30545abdb54f81157e24cc199f95a61e191574",
+  "unchecked": [
+    "Real-device GPU frame rate",
+    "Other browser engines"
+  ]
+}
